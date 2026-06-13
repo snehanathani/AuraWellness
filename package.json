@@ -1,0 +1,12 @@
+{
+  "name": "aura-wellness",
+  "version": "1.0.0",
+  "description": "Aura Mental Wellness Tracker for JEE, NEET, UPSC, and Board Exam students",
+  "main": "src/js/core.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}

@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Aura — Mental Wellness Tracker for exam students. Track mood, sleep, stress, and burnout. Breathing coach, AI companion, and UPSC/JEE/NEET coping tools." />
+  <meta name="theme-color" content="#0d0f14" />
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src https://fonts.gstatic.com https://cdn.jsdelivr.net; connect-src https://openrouter.ai https://*.supabase.co; img-src 'self' data:;" />
+  <title>Aura — Mental Wellness Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.4.0/dist/tabler-icons.min.css" />
+  <link rel="stylesheet" href="src/css/styles.css" />
+</head>
+<body>
+
+  <!-- Skip navigation for keyboard/screen reader users -->
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <!-- ─── HEADER ──────────────────────────────────────────── -->
+  <header class="app-header" role="banner">
+    <div class="header-brand">
+      <div class="brand-mark" aria-hidden="true">✦</div>
+      <span class="brand-name">Aura <span>Wellness</span></span>
+    </div>
+
+    <div class="header-actions">
+      <button id="btn-quick-demo" class="btn btn-secondary" type="button"
+              aria-label="Load quick-start demo with 5 days of sample student data">
+        <i class="ti ti-player-play" aria-hidden="true"></i>
+        Quick Demo
+      </button>
+      <button id="btn-open-auth" class="btn btn-ghost btn-icon" type="button"
+              aria-label="Sign in or create account"
+              onclick="document.getElementById('auth-overlay').classList.add('open')">
+        <i class="ti ti-user" aria-hidden="true"></i>
+      </button>
+      <button id="btn-open-settings" class="btn btn-ghost btn-icon" type="button"
+              aria-label="Open settings drawer">
+        <i class="ti ti-settings" aria-hidden="true"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- ─── PRIMARY NAVIGATION ──────────────────────────────── -->
+  <nav class="main-nav" aria-label="Main navigation">
+    <ul class="nav-list" role="tablist">
+      <li class="nav-tab" role="none">
+        <button class="nav-tab-btn" role="tab" id="tab-btn-dashboard"
+                data-tab="dashboard" aria-selected="true" aria-controls="tab-dashboard">
+          <i class="ti ti-layout-dashboard nav-icon" aria-hidden="true"></i>
+          Dashboard
+        </button>
+      </li>
+      <li class="nav-tab" role="none">
+        <button class="nav-tab-btn" role="tab" id="tab-btn-journal"
+                data-tab="journal" aria-selected="false" aria-controls="tab-journal">
+          <i class="ti ti-notebook nav-icon" aria-hidden="true"></i>
+          Journal
+        </button>
+      </li>
+      <li class="nav-tab" role="none">
+        <button class="nav-tab-btn" role="tab" id="tab-btn-breathe"
+                data-tab="breathe" aria-selected="false" aria-controls="tab-breathe">
+          <i class="ti ti-wind nav-icon" aria-hidden="true"></i>
+          Breathe
+        </button>
+      </li>
+      <li class="nav-tab" role="none">
+        <button class="nav-tab-btn" role="tab" id="tab-btn-chat"
+                data-tab="chat" aria-selected="false" aria-controls="tab-chat">
+          <i class="ti ti-message-circle nav-icon" aria-hidden="true"></i>
+          Companion
+        </button>
+      </li>
+      <li class="nav-tab" role="none">
+        <button class="nav-tab-btn" role="tab" id="tab-btn-history"
+                data-tab="history" aria-selected="false" aria-controls="tab-history">
+          <i class="ti ti-history nav-icon" aria-hidden="true"></i>
+          History
+        </button>
+      </li>
+      <li class="nav-tab" role="none">
+        <button class="nav-tab-btn" role="tab" id="tab-btn-charts"
+                data-tab="charts" aria-selected="false" aria-controls="tab-charts">
+          <i class="ti ti-chart-line nav-icon" aria-hidden="true"></i>
+          Charts
+        </button>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- ─── MAIN ─────────────────────────────────────────────── -->
+  <main id="main-content" class="app-main" role="main">
+
+    <!-- ── DASHBOARD TAB ─────────────────────────────────── -->
+    <section id="tab-dashboard" class="tab-panel active"
+             role="tabpanel" aria-labelledby="tab-btn-dashboard">
+      <h2 class="section-heading">
+        <i class="ti ti-layout-dashboard" aria-hidden="true" style="color:var(--accent)"></i>
+        Your Wellness Overview
+      </h2>
+      <p class="section-sub">A 7-day snapshot of your mental health metrics.</p>
+
+      <!-- Stats row -->
+      <div class="dashboard-grid" aria-label="Wellness statistics">
+        <div class="stat-card" id="stat-wellness" aria-label="Average wellness score">
+          <div class="stat-accent-bar bar-blue"></div>
+          <div class="stat-label">Wellness Score</div>
+          <div class="stat-value info" aria-live="polite">—</div>
+          <div class="stat-sub">7-day average</div>
+        </div>
+        <div class="stat-card" id="stat-mood" aria-label="Average mood">
+          <div class="stat-accent-bar bar-green"></div>
+          <div class="stat-label">Avg Mood</div>
+          <div class="stat-value good" aria-live="polite">—</div>
+          <div class="stat-sub">Average mood</div>
+        </div>
+        <div class="stat-card" id="stat-sleep" aria-label="Average sleep hours">
+          <div class="stat-accent-bar bar-amber"></div>
+          <div class="stat-label">Avg Sleep</div>
+          <div class="stat-value warn" aria-live="polite">—</div>
+          <div class="stat-sub">Average sleep</div>
+        </div>
+        <div class="stat-card" id="stat-streak" aria-label="Current logging streak">
+          <div class="stat-accent-bar bar-rose"></div>
+          <div class="stat-label">Streak</div>
+          <div class="stat-value danger" aria-live="polite">0</div>
+          <div class="stat-sub">day streak</div>
+        </div>
+      </div>
+
+      <!-- Burnout prediction -->
+      <section class="glass-card" aria-labelledby="burnout-heading">
+        <h3 class="card-title" id="burnout-heading">
+          <i class="ti ti-flame card-title-icon" aria-hidden="true"></i>
+          Burnout Risk Predictor
+        </h3>
+        <div class="burnout-meter-wrap">
+          <div class="progress-bar-track" role="progressbar" aria-valuemin="0" aria-valuemax="100"
+               aria-valuenow="0" aria-label="Burnout risk level">
+            <div class="progress-bar-fill" id="burnout-fill" style="width:0%"></div>
+          </div>
+          <div class="burnout-labels">
+            <span>Low</span><span>Moderate</span><span>High</span>
+          </div>
+          <div id="burnout-badge" class="burnout-score-badge burnout-low">
+            No data yet
+          </div>
+        </div>
+        <p style="font-size:13px;color:var(--text-muted);margin-top:8px">
+          Calculated from mood trends, sleep, stress, and journal language over 7 days.
+        </p>
+        <!-- aria-live region for burnout updates -->
+        <div id="burnout-region" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+      </section>
+
+      <!-- Latest entry preview -->
+      <section class="glass-card" style="margin-top:var(--space-md)" aria-labelledby="latest-heading">
+        <h3 class="card-title" id="latest-heading">
+          <i class="ti ti-clock card-title-icon" aria-hidden="true"></i>
+          Most Recent Entry
+        </h3>
+        <div id="latest-entry" aria-live="polite">
+          <p class="empty-state-msg">No entries yet. Go to the Journal tab to start tracking.</p>
+        </div>
+      </section>
+    </section>
+
+    <!-- ── JOURNAL TAB ────────────────────────────────────── -->
+    <section id="tab-journal" class="tab-panel"
+             role="tabpanel" aria-labelledby="tab-btn-journal">
+      <h2 class="section-heading">
+        <i class="ti ti-notebook" aria-hidden="true" style="color:var(--accent)"></i>
+        Daily Journal Entry
+      </h2>
+      <p class="section-sub">Track your mood, sleep, and stress. Your journal is scanned for exam-related keywords.</p>
+
+      <div class="glass-card">
+        <form id="journal-form" novalidate aria-label="Journal entry form">
+          <h3 class="card-title" style="margin-bottom:var(--space-md)">
+            <i class="ti ti-pencil card-title-icon" aria-hidden="true"></i>
+            Today's Check-in
+          </h3>
+
+          <div class="journal-metrics-row">
+            <!-- Mood -->
+            <div class="form-group">
+              <label for="input-mood">
+                Mood
+                <span style="color:var(--text-muted);font-weight:400">(1 = very low, 10 = excellent)</span>
+              </label>
+              <div class="range-wrapper">
+                <input type="range" id="input-mood" name="mood"
+                       min="1" max="10" step="1" value="5"
+                       aria-valuemin="1" aria-valuemax="10" aria-valuenow="5"
+                       aria-describedby="mood-hint" />
+                <span class="range-value" id="val-mood" aria-live="polite" aria-atomic="true">5</span>
+              </div>
+              <small id="mood-hint" class="sr-only">Drag slider to set your current mood from 1 to 10.</small>
+            </div>
+
+            <!-- Sleep -->
+            <div class="form-group">
+              <label for="input-sleep">
+                Sleep hours
+                <span style="color:var(--text-muted);font-weight:400">(last night)</span>
+              </label>
+              <div class="range-wrapper">
+                <input type="range" id="input-sleep" name="sleep"
+                       min="0" max="12" step="0.5" value="7"
+                       aria-valuemin="0" aria-valuemax="12"
+                       aria-describedby="sleep-hint" />
+                <span class="range-value" id="val-sleep" aria-live="polite" aria-atomic="true">7</span>
+              </div>
+              <small id="sleep-hint" class="sr-only">Drag to set hours of sleep you got last night.</small>
+            </div>
+
+            <!-- Stress -->
+            <div class="form-group">
+              <label for="input-stress">
+                Stress level
+                <span style="color:var(--text-muted);font-weight:400">(1 = calm, 10 = overwhelmed)</span>
+              </label>
+              <div class="range-wrapper">
+                <input type="range" id="input-stress" name="stress"
+                       min="1" max="10" step="1" value="5"
+                       aria-valuemin="1" aria-valuemax="10" aria-valuenow="5"
+                       aria-describedby="stress-hint" />
+                <span class="range-value" id="val-stress" aria-live="polite" aria-atomic="true">5</span>
+              </div>
+              <small id="stress-hint" class="sr-only">Drag to set your current stress level from 1 to 10.</small>
+            </div>
+          </div>
+
+          <!-- Journal textarea -->
+          <div class="form-group" style="margin-top:var(--space-md)">
+            <label for="input-journal">Journal entry</label>
+            <textarea id="input-journal" name="journal"
+                      placeholder="Write freely about your day, exam preparation, how you're feeling, what's weighing on your mind…"
+                      rows="5"
+                      aria-describedby="journal-hint keyword-badges"
+                      aria-required="true"></textarea>
+            <small id="journal-hint" style="font-size:12px;color:var(--text-muted);margin-top:4px;display:block">
+              Aura detects exam-stress keywords and provides targeted coping suggestions.
+            </small>
+          </div>
+
+          <!-- Live keyword detection badges -->
+          <div id="keyword-badges" class="keyword-badges" aria-live="polite" aria-atomic="true" aria-label="Detected keywords"></div>
+
+          <!-- Coping suggestion (hidden until text entered) -->
+          <div id="coping-suggestion" class="coping-box" style="display:none" role="region" aria-label="Coping suggestion" aria-live="polite">
+            <div class="coping-box-header">Suggested coping strategy</div>
+            <p class="coping-text"></p>
+          </div>
+
+          <!-- Submit -->
+          <div style="display:flex;gap:var(--space-sm);margin-top:var(--space-lg);flex-wrap:wrap">
+            <button type="submit" class="btn btn-primary" id="btn-submit-entry">
+              <i class="ti ti-check" aria-hidden="true"></i>
+              Save Entry
+            </button>
+            <button type="button" class="btn btn-secondary" id="btn-load-demo"
+                    aria-label="Load 5 days of demo student data">
+              <i class="ti ti-sparkles" aria-hidden="true"></i>
+              Load Demo Data
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ── BREATHING COACH TAB ────────────────────────────── -->
+    <section id="tab-breathe" class="tab-panel"
+             role="tabpanel" aria-labelledby="tab-btn-breathe">
+      <h2 class="section-heading">
+        <i class="ti ti-wind" aria-hidden="true" style="color:var(--accent)"></i>
+        Breathing Coach
+      </h2>
+      <p class="section-sub">Activate your parasympathetic nervous system. Reduce cortisol in under 5 minutes.</p>
+
+      <div class="glass-card">
+        <!-- Mode selector -->
+        <h3 class="card-title" style="margin-bottom:var(--space-md)">
+          <i class="ti ti-settings card-title-icon" aria-hidden="true"></i>
+          Choose technique
+        </h3>
+        <div class="breath-mode-select-wrap" role="group" aria-label="Select breathing technique">
+          <button class="btn btn-primary breath-mode-btn" type="button"
+                  data-mode="box" aria-pressed="true">
+            Box Breathing (4-4-4-4)
+          </button>
+          <button class="btn btn-secondary breath-mode-btn" type="button"
+                  data-mode="478" aria-pressed="false">
+            4-7-8 Technique
+          </button>
+        </div>
+
+        <!-- Visual circle -->
+        <div class="breathing-container" aria-label="Breathing exercise visual">
+          <div class="breathing-ring-wrap" aria-hidden="true">
+            <div class="breathing-circle" id="breathing-circle">
+              <span class="breathing-phase-label" id="breathing-phase">Ready</span>
+              <span class="breathing-countdown" id="breathing-countdown" aria-live="off"></span>
+            </div>
+          </div>
+
+          <!-- Instructions -->
+          <p class="breathing-instruction" id="breathing-instruction" aria-live="polite">
+            Press start to begin your breathing session.
+          </p>
+
+          <!-- Cycle progress dots -->
+          <div class="breathing-progress" id="breathing-dots" aria-label="Cycle progress" role="status"></div>
+
+          <!-- Screen-reader status -->
+          <div id="breathing-status" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+          <!-- Controls -->
+          <div class="breathing-controls">
+            <button id="btn-breath-start" class="btn btn-primary" type="button">
+              <i class="ti ti-player-play" aria-hidden="true"></i>
+              Start
+            </button>
+            <button id="btn-breath-stop" class="btn btn-secondary" type="button" disabled>
+              <i class="ti ti-player-stop" aria-hidden="true"></i>
+              Stop
+            </button>
+          </div>
+        </div>
+
+        <!-- Info cards -->
+        <div class="split-grid" style="margin-top:var(--space-lg)">
+          <div class="glass-card" style="padding:var(--space-md)">
+            <h4 style="font-size:14px;font-weight:600;margin-bottom:8px;color:var(--accent)">Box Breathing</h4>
+            <p style="font-size:13px;color:var(--text-secondary);line-height:1.7">
+              Inhale 4s → Hold 4s → Exhale 4s → Hold 4s. Used by Navy SEALs and performance athletes. Regulates autonomic nervous system and reduces pre-exam panic.
+            </p>
+          </div>
+          <div class="glass-card" style="padding:var(--space-md)">
+            <h4 style="font-size:14px;font-weight:600;margin-bottom:8px;color:var(--accent-violet)">4-7-8 Technique</h4>
+            <p style="font-size:13px;color:var(--text-secondary);line-height:1.7">
+              Inhale 4s → Hold 7s → Exhale 8s. Developed by Dr. Andrew Weil. Particularly effective for anxiety and sleep onset — ideal for nights before exams.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CHAT COMPANION TAB ─────────────────────────────── -->
+    <section id="tab-chat" class="tab-panel"
+             role="tabpanel" aria-labelledby="tab-btn-chat">
+      <h2 class="section-heading">
+        <i class="ti ti-message-circle" aria-hidden="true" style="color:var(--accent)"></i>
+        AI Wellness Companion
+      </h2>
+      <p class="section-sub">
+        Aura understands JEE, NEET, UPSC, SSC, and board exam stress.
+        Add your OpenRouter API key in Settings to enable cloud AI.
+      </p>
+
+      <div class="chat-container" role="region" aria-label="Chat with Aura">
+        <!-- Messages -->
+        <div id="chat-messages" class="chat-messages" role="log" aria-live="polite" aria-label="Conversation">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Typing indicator -->
+        <div id="chat-typing" class="chat-typing-indicator" aria-label="Aura is typing" aria-live="polite">
+          <div class="dot-flashing" aria-hidden="true"></div>
+          <div class="dot-flashing" aria-hidden="true"></div>
+          <div class="dot-flashing" aria-hidden="true"></div>
+          <span class="sr-only">Aura is thinking…</span>
+        </div>
+
+        <!-- Input bar -->
+        <div class="chat-input-bar">
+          <label for="chat-input" class="sr-only">Message Aura</label>
+          <textarea id="chat-input" class="chat-input"
+                    placeholder="Tell Aura how you're feeling, ask about coping strategies…"
+                    rows="1"
+                    aria-label="Type your message to Aura"></textarea>
+          <button id="chat-send" class="btn btn-primary" type="button" aria-label="Send message">
+            <i class="ti ti-send" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── HISTORY TAB ────────────────────────────────────── -->
+    <section id="tab-history" class="tab-panel"
+             role="tabpanel" aria-labelledby="tab-btn-history">
+      <h2 class="section-heading">
+        <i class="ti ti-history" aria-hidden="true" style="color:var(--accent)"></i>
+        Journal History
+      </h2>
+      <p class="section-sub">All your entries, newest first. Exam keywords are highlighted.</p>
+
+      <div id="history-list" class="log-list" aria-label="Journal entry history" aria-live="polite">
+        <div class="empty-state">
+          <div class="empty-state-icon" aria-hidden="true">📭</div>
+          <p class="empty-state-msg">No entries yet. Your history will appear here after your first journal submission.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CHARTS TAB ─────────────────────────────────────── -->
+    <section id="tab-charts" class="tab-panel"
+             role="tabpanel" aria-labelledby="tab-btn-charts">
+      <h2 class="section-heading">
+        <i class="ti ti-chart-line" aria-hidden="true" style="color:var(--accent)"></i>
+        Weekly Progress
+      </h2>
+      <p class="section-sub">Native SVG charts — no external libraries. Last 7 days of data.</p>
+
+      <!-- Wellness score chart -->
+      <section class="glass-card" aria-labelledby="wellness-chart-heading">
+        <h3 class="card-title" id="wellness-chart-heading">
+          <i class="ti ti-chart-area card-title-icon" aria-hidden="true"></i>
+          Wellness Score Trend
+        </h3>
+        <div class="chart-wrapper" id="chart-wellness"></div>
+        <div class="chart-legend" aria-label="Chart legend">
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#6c8fff" aria-hidden="true"></div>
+            <span>Wellness (0–100)</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Mood vs Stress chart -->
+      <section class="glass-card" style="margin-top:var(--space-lg)" aria-labelledby="moodstress-heading">
+        <h3 class="card-title" id="moodstress-heading">
+          <i class="ti ti-chart-line card-title-icon" aria-hidden="true"></i>
+          Mood vs Stress
+        </h3>
+        <div class="chart-wrapper" id="chart-moodstress"></div>
+        <div class="chart-legend" aria-label="Chart legend">
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#52d9a0" aria-hidden="true"></div>
+            <span>Mood (1–10)</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#ff6b8a" aria-hidden="true"></div>
+            <span>Stress (1–10)</span>
+          </div>
+        </div>
+      </section>
+    </section>
+
+  </main>
+
+  <!-- ─── FOOTER ───────────────────────────────────────────── -->
+  <footer class="app-footer" role="contentinfo">
+    <p>Aura Mental Wellness Tracker &nbsp;·&nbsp; Built for JEE · NEET · UPSC · SSC · Board Exam students</p>
+    <p style="margin-top:4px;font-size:12px">All data is stored locally on your device. No tracking. No ads.</p>
+  </footer>
+
+  <!-- ─── SETTINGS DRAWER ──────────────────────────────────── -->
+  <div id="settings-overlay" class="settings-overlay" role="dialog"
+       aria-labelledby="settings-drawer-title" aria-modal="true">
+    <div id="settings-drawer" class="settings-drawer">
+      <div class="settings-header">
+        <h2 class="settings-title" id="settings-drawer-title">
+          <i class="ti ti-settings" aria-hidden="true"></i>
+          Settings
+        </h2>
+        <button id="btn-close-settings" class="btn btn-ghost btn-icon" type="button"
+                aria-label="Close settings">
+          <i class="ti ti-x" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <div class="settings-body">
+
+        <!-- OpenRouter -->
+        <section class="settings-section" aria-labelledby="or-section-label">
+          <div class="settings-section-label" id="or-section-label">OpenRouter AI</div>
+          <div class="form-group">
+            <label for="setting-or-key">API key</label>
+            <input type="password" id="setting-or-key" name="openrouter_key"
+                   autocomplete="off"
+                   placeholder="sk-or-v1-…"
+                   aria-describedby="or-key-hint" />
+            <small id="or-key-hint" style="font-size:12px;color:var(--text-muted)">
+              Get a free key at openrouter.ai. Powers the AI companion chat.
+            </small>
+          </div>
+          <div class="form-group">
+            <label for="setting-model">AI model</label>
+            <select id="setting-model" name="model">
+              <option value="mistralai/mistral-7b-instruct">Mistral 7B Instruct (free)</option>
+              <option value="meta-llama/llama-3.1-8b-instruct">Llama 3.1 8B (free)</option>
+              <option value="google/gemma-2-9b-it:free">Gemma 2 9B (free)</option>
+              <option value="openai/gpt-4o-mini">GPT-4o Mini</option>
+              <option value="anthropic/claude-3-haiku">Claude 3 Haiku</option>
+            </select>
+          </div>
+        </section>
+
+        <!-- Supabase -->
+        <section class="settings-section" aria-labelledby="sb-section-label">
+          <div class="settings-section-label" id="sb-section-label">Supabase (optional cloud sync)</div>
+          <div class="form-group">
+            <label for="setting-sb-url">Project URL</label>
+            <input type="text" id="setting-sb-url" name="supabase_url"
+                   placeholder="https://xyz.supabase.co"
+                   autocomplete="off" />
+          </div>
+          <div class="form-group">
+            <label for="setting-sb-key">Anon public key</label>
+            <input type="password" id="setting-sb-key" name="supabase_key"
+                   autocomplete="off"
+                   placeholder="eyJ…" />
+            <small style="font-size:12px;color:var(--text-muted)">
+              Enables cross-device sync via your own Supabase project. Table: <code>wellness_logs</code>.
+            </small>
+          </div>
+        </section>
+
+        <button id="btn-save-settings" class="btn btn-primary" type="button" style="width:100%">
+          <i class="ti ti-device-floppy" aria-hidden="true"></i>
+          Save Settings
+        </button>
+
+        <section class="settings-section" aria-labelledby="data-section-label">
+          <div class="settings-section-label" id="data-section-label">Data management</div>
+          <button type="button" class="btn btn-danger" style="width:100%"
+                  onclick="if(confirm('Delete all local journal entries? This cannot be undone.')) { localStorage.removeItem('aura_logs_v2'); window.location.reload(); }">
+            <i class="ti ti-trash" aria-hidden="true"></i>
+            Clear all local data
+          </button>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── AUTH OVERLAY ─────────────────────────────────────── -->
+  <div id="auth-overlay" class="auth-overlay" role="dialog"
+       aria-labelledby="auth-title" aria-modal="true">
+    <div class="auth-modal">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-md)">
+        <h2 class="auth-title" id="auth-title">Sign in to Aura</h2>
+        <button id="btn-close-auth" class="btn btn-ghost btn-icon" type="button"
+                aria-label="Close sign in dialog">
+          <i class="ti ti-x" aria-hidden="true"></i>
+        </button>
+      </div>
+      <p class="auth-sub">Connect your Supabase account to sync entries across devices.</p>
+
+      <!-- Auth tabs -->
+      <div class="auth-tabs" role="tablist" aria-label="Sign in or sign up">
+        <button class="auth-tab-btn active" role="tab" data-mode="login"
+                aria-selected="true">Sign in</button>
+        <button class="auth-tab-btn" role="tab" data-mode="signup"
+                aria-selected="false">Create account</button>
+      </div>
+
+      <!-- Login panel -->
+      <div class="auth-panel" data-mode="login">
+        <div class="form-group">
+          <label for="auth-email">Email</label>
+          <input type="email" id="auth-email" name="email"
+                 autocomplete="email" placeholder="you@example.com" />
+        </div>
+        <div class="form-group">
+          <label for="auth-password">Password</label>
+          <input type="password" id="auth-password" name="password"
+                 autocomplete="current-password" placeholder="••••••••" />
+        </div>
+        <p id="auth-error" class="field-error" aria-live="polite" style="margin-bottom:12px;min-height:18px"></p>
+        <button id="btn-auth-login" class="btn btn-primary" type="button" style="width:100%">
+          <i class="ti ti-login" aria-hidden="true"></i>
+          Sign in
+        </button>
+      </div>
+
+      <!-- Signup panel (hidden) -->
+      <div class="auth-panel" data-mode="signup" style="display:none">
+        <div class="form-group">
+          <label for="auth-signup-email">Email</label>
+          <input type="email" id="auth-signup-email" name="signup_email"
+                 autocomplete="email" placeholder="you@example.com" />
+        </div>
+        <div class="form-group">
+          <label for="auth-signup-password">Password</label>
+          <input type="password" id="auth-signup-password" name="signup_password"
+                 autocomplete="new-password" placeholder="Min. 8 characters" />
+        </div>
+        <p id="auth-signup-error" class="field-error" aria-live="polite" style="margin-bottom:12px;min-height:18px"></p>
+        <button id="btn-auth-signup" class="btn btn-primary" type="button" style="width:100%">
+          <i class="ti ti-user-plus" aria-hidden="true"></i>
+          Create account
+        </button>
+      </div>
+
+      <p style="font-size:12px;color:var(--text-muted);margin-top:var(--space-md);text-align:center">
+        Requires Supabase credentials configured in Settings.
+      </p>
+    </div>
+  </div>
+
+  <!-- ─── TOAST NOTIFICATION REGION ───────────────────────── -->
+  <div id="toast-region" role="region" aria-label="Notifications" aria-live="polite"></div>
+
+  <!-- ─── SCRIPTS ──────────────────────────────────────────── -->
+  <script src="src/js/core.js"></script>
+  <script src="src/js/app.js"></script>
+</body>
+</html>

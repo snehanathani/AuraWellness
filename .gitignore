@@ -1,0 +1,15 @@
+# Dependency directories
+node_modules/
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Local env / credentials (never commit secrets)
+.env
+.env.local
+.env.*.local
+
+# Jest / coverage files
+coverage/
+.jest/
