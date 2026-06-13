@@ -23,7 +23,7 @@
   <header class="app-header" role="banner">
     <div class="header-brand">
       <div class="brand-mark" aria-hidden="true">✦</div>
-      <span class="brand-name">Aura <span>Wellness</span></span>
+      <h1 class="brand-name">Aura <span>Wellness</span></h1>
     </div>
 
     <div class="header-actions">
@@ -33,8 +33,7 @@
         Quick Demo
       </button>
       <button id="btn-open-auth" class="btn btn-ghost btn-icon" type="button"
-              aria-label="Sign in or create account"
-              onclick="document.getElementById('auth-overlay').classList.add('open')">
+              aria-label="Sign in or create account">
         <i class="ti ti-user" aria-hidden="true"></i>
       </button>
       <button id="btn-open-settings" class="btn btn-ghost btn-icon" type="button"
@@ -232,6 +231,22 @@
                 <span class="range-value" id="val-stress" aria-live="polite" aria-atomic="true">5</span>
               </div>
               <small id="stress-hint" class="sr-only">Drag to set your current stress level from 1 to 10.</small>
+            </div>
+
+            <!-- Physical Activity (A11y & Alignment addition) -->
+            <div class="form-group">
+              <label for="input-activity">
+                Physical Activity
+                <span style="color:var(--text-muted);font-weight:400">(minutes active today)</span>
+              </label>
+              <div class="range-wrapper">
+                <input type="range" id="input-activity" name="activity"
+                       min="0" max="120" step="5" value="30"
+                       aria-valuemin="0" aria-valuemax="120" aria-valuenow="30"
+                       aria-describedby="activity-hint" />
+                <span class="range-value" id="val-activity" aria-live="polite" aria-atomic="true">30</span>
+              </div>
+              <small id="activity-hint" class="sr-only">Drag slider to set minutes of physical activity done today.</small>
             </div>
           </div>
 
@@ -528,8 +543,7 @@
 
         <section class="settings-section" aria-labelledby="data-section-label">
           <div class="settings-section-label" id="data-section-label">Data management</div>
-          <button type="button" class="btn btn-danger" style="width:100%"
-                  onclick="if(confirm('Delete all local journal entries? This cannot be undone.')) { localStorage.removeItem('aura_logs_v2'); window.location.reload(); }">
+          <button type="button" class="btn btn-danger" style="width:100%" id="btn-clear-data">
             <i class="ti ti-trash" aria-hidden="true"></i>
             Clear all local data
           </button>

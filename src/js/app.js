@@ -1264,6 +1264,17 @@
     updateDashboardUI();
     appendChatMessage('assistant', 'Hello. I am Aura, your wellness mentor. Preparing for competitive exams is demanding. Feel free to talk to me about preparation pressure, mock tests, backlogs, or study plans.');
 
+    // CSP-compliant event listeners
+    const clearDataBtn = document.getElementById('btn-clear-data');
+    if (clearDataBtn) {
+      clearDataBtn.addEventListener('click', () => {
+        if (confirm('Delete all local journal entries? This cannot be undone.')) {
+          localStorage.removeItem(STORAGE_LOGS_KEY);
+          window.location.reload();
+        }
+      });
+    }
+
     if (state.user) {
       loadLogsFromSupabase();
     }
@@ -1280,7 +1291,8 @@
     const sliders = [
       { id: 'input-mood', valId: 'val-mood' },
       { id: 'input-sleep', valId: 'val-sleep' },
-      { id: 'input-stress', valId: 'val-stress' }
+      { id: 'input-stress', valId: 'val-stress' },
+      { id: 'input-activity', valId: 'val-activity' }
     ];
 
     sliders.forEach(s => {
@@ -1317,7 +1329,8 @@
           const tempMood = document.getElementById('input-mood').value;
           const tempStress = document.getElementById('input-stress').value;
           const tempSleep = document.getElementById('input-sleep').value;
-          const score = window.Core.calculateWellnessScore(tempMood, tempSleep, 30, tempStress);
+          const tempActivity = document.getElementById('input-activity').value;
+          const score = window.Core.calculateWellnessScore(tempMood, tempSleep, tempActivity, tempStress);
           const burnout = window.Core.calculateBurnoutPrediction(tempStress, tempSleep, keywords.length);
           const suggestions = window.Core.generateCopingSuggestions(score, burnout, keywords);
 
@@ -1342,6 +1355,7 @@
         const mood = Number(document.getElementById('input-mood').value);
         const sleep = Number(document.getElementById('input-sleep').value);
         const stress = Number(document.getElementById('input-stress').value);
+        const activity = Number(document.getElementById('input-activity').value);
         const journal = document.getElementById('input-journal').value.trim();
 
         if (!journal) {
@@ -1350,7 +1364,7 @@
         }
 
         const keywords = window.Core.scanJournalForStressKeywords(journal);
-        const wellnessScore = window.Core.calculateWellnessScore(mood, sleep, 30, stress);
+        const wellnessScore = window.Core.calculateWellnessScore(mood, sleep, activity, stress);
         const burnoutScore = window.Core.calculateBurnoutPrediction(stress, sleep, keywords.length);
         const copingSuggestions = window.Core.generateCopingSuggestions(wellnessScore, burnoutScore, keywords);
 
@@ -1358,7 +1372,7 @@
           id: 'log-' + Date.now(),
           mood,
           sleepHours: sleep,
-          activityMinutes: 30, // Default baseline activity
+          activityMinutes: activity,
           stressLevel: stress,
           journalText: journal,
           wellnessScore,
@@ -1378,6 +1392,7 @@
         document.getElementById('val-mood').textContent = '5';
         document.getElementById('val-sleep').textContent = '7';
         document.getElementById('val-stress').textContent = '5';
+        document.getElementById('val-activity').textContent = '30';
         clearElement(document.getElementById('keyword-badges'));
         document.getElementById('coping-suggestion').style.display = 'none';
 

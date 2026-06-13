@@ -134,4 +134,43 @@ describe('Aura Mental Wellness Tracker - Core Calculations', () => {
     expect(escaped).toContain('&quot;');
   });
 
+  // 16. calculateWellnessScore - Activity boundary checks
+  test('calculateWellnessScore differentiates between 0 and 120 minutes of activity', () => {
+    const scoreZero = Core.calculateWellnessScore(5, 7, 0, 5);
+    const scoreMax = Core.calculateWellnessScore(5, 7, 120, 5);
+    expect(scoreMax).toBeGreaterThan(scoreZero);
+  });
+
+  // 17. scanJournalForStressKeywords - Overlapping keywords uniqueness
+  test('scanJournalForStressKeywords returns a unique list of keywords even if repeated', () => {
+    const text = 'syllabus syllabus backlog backlog board exam';
+    const matches = Core.scanJournalForStressKeywords(text);
+    const uniques = [...new Set(matches)];
+    expect(uniques.length).toBe(matches.length);
+    expect(matches).toContain('syllabus');
+    expect(matches).toContain('backlog');
+    expect(matches).toContain('board exam');
+  });
+
+  // 18. generateCopingSuggestions - High wellness, high stress
+  test('generateCopingSuggestions handles high wellness and high stress scenario', () => {
+    const suggestions = Core.generateCopingSuggestions(90, 75, ['mock test']);
+    const adviceText = suggestions.join(' ');
+    expect(adviceText).toContain('High burnout risk detected');
+    expect(adviceText.toLowerCase()).toContain('mock test');
+  });
+
+  // 19. getMockCompanionResponse - Positive mood, high stress
+  test('getMockCompanionResponse offers box breathing when stress is very high', () => {
+    const response = Core.getMockCompanionResponse(8, 9, ['jee']);
+    expect(response).toContain('Breathe');
+    expect(response).toContain('Box Breathing');
+  });
+
+  // 20. calculateBurnoutPrediction - Moderate stress, high keyword count
+  test('calculateBurnoutPrediction calculates moderate risk for average stress but high academic load indicators', () => {
+    const score = Core.calculateBurnoutPrediction(5, 7, 8); // stress=5 (30 pts), sleep=7 (0 pts), keywords=8 (20 pts) -> 50
+    expect(score).toBe(50);
+  });
+
 });
